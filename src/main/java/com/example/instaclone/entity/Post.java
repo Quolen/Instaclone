@@ -1,4 +1,4 @@
-package com.example.entity;
+package com.example.instaclone.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;

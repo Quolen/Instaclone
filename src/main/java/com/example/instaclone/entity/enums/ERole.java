@@ -1,4 +1,4 @@
-package com.example.entity.enums;
+package com.example.instaclone.entity.enums;
 
 public enum ERole {
     ROLE_USER,

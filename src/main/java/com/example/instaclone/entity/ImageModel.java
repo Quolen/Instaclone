@@ -1,4 +1,4 @@
-package com.example.entity;
+package com.example.instaclone.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
