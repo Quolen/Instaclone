@@ -33,6 +33,7 @@ public class JWTTokenProvider {
                 .setSubject(userId)
                 .addClaims(claimsMap)
                 .setIssuedAt(now)
+                .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, SecurityConstants.SECRET)
                 .compact();
     }
