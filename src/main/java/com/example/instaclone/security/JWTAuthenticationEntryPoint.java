@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+// Responsible for handling 401 error.
 @Component
 public class JWTAuthenticationEntryPoint implements AuthenticationEntryPoint {
 

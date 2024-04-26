@@ -20,6 +20,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collections;
 
+// Responsible for checking the validity of the JWT token.
 @Component
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
