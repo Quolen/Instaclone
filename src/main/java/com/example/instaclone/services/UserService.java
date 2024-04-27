@@ -30,7 +30,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User createUser(SignupRequest userIn) {
+    public void createUser(SignupRequest userIn) {
         User user = new User();
         user.setEmail(userIn.getEmail());
         user.setName(userIn.getFirstname());
@@ -41,7 +41,7 @@ public class UserService {
 
         try {
             LOG.info("Saving User {}", userIn.getEmail());
-            return userRepository.save(user);
+            userRepository.save(user);
         } catch (Exception e) {
             LOG.error("Error during registration. {}", e.getMessage());
             throw new UserExistException("The user " + user.getUsername() + " already exist. Please check credentials.");
