@@ -44,7 +44,7 @@ public class UserService {
             userRepository.save(user);
         } catch (Exception e) {
             LOG.error("Error during registration. {}", e.getMessage());
-            throw new UserExistException("The user " + user.getUsername() + " already exist. Please check credentials.");
+            throw new UserExistException("The user with such email \"" + user.getEmail() + "\" already exists. Please check your credentials.");
         }
     }
 }
