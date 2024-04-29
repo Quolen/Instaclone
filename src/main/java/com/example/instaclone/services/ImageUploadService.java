@@ -47,6 +47,7 @@ public class ImageUploadService {
         User user = getUserByPrincipal(principal);
         LOG.info("Uploading image profile to User {}", user.getUsername());
 
+        // If user already has an image we delete it.
         ImageModel userProfileImage = imageRepository.findByUserId(user.getId()).orElse(null);
         if (!ObjectUtils.isEmpty(userProfileImage)) {
             imageRepository.delete(userProfileImage);
