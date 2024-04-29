@@ -18,6 +18,9 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
+/*
+ Comment Service for managing comments related logic.
+ */
 @Service
 public class CommentService {
 
@@ -63,7 +66,7 @@ public class CommentService {
         comment.ifPresent(commentRepository::delete);
     }
 
-    public User getUserByPrincipal(Principal principal) {
+    private User getUserByPrincipal(Principal principal) {
         String username = principal.getName();
         return userRepository.findUserByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Username not found"));
