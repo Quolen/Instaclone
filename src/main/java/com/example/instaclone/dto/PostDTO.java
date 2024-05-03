@@ -1,5 +1,6 @@
 package com.example.instaclone.dto;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
 import java.util.Set;
@@ -9,8 +10,10 @@ public class PostDTO {
 
     private Long id;
 
+    @NotEmpty
     private String title;
 
+    @NotEmpty
     private String caption;
 
     private String location;
