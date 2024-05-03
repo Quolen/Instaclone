@@ -1,5 +1,6 @@
 package com.example.instaclone.advice;
 
+import com.example.instaclone.exceptions.PostNotFoundException;
 import com.example.instaclone.exceptions.UserExistException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,5 +12,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UserExistException.class)
     public ResponseEntity<String> handleUserExistException(UserExistException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);  // Correctly mapped to HTTP 400
+    }
+
+    @ExceptionHandler(PostNotFoundException.class)
+    public ResponseEntity<String> handlePostNotFoundException(PostNotFoundException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }
