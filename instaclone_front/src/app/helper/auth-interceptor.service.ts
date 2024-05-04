@@ -8,6 +8,8 @@ const TOKEN_HEADER_KEY = "Authorization";
 @Injectable({
   providedIn: 'root'
 })
+
+// Sets Authorization header with token
 export class AuthInterceptorService implements HttpInterceptor {
 
   constructor(private tokenService: TokenStorageService) { }
