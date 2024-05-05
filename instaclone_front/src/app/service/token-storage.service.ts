@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
+import {isPlatformBrowser} from "@angular/common";
 
 const TOKEN_KEY = 'auth-token';
 const USER_KEY = 'auth-user';
@@ -7,7 +8,7 @@ const USER_KEY = 'auth-user';
   providedIn: 'root',
 })
 export class TokenStorageService {
-  constructor() {}  // No setup required
+  constructor(@Inject(PLATFORM_ID) public platformId: Object) {}  // No setup required
 
   public saveToken(token: string): void {
     sessionStorage.setItem(TOKEN_KEY, token);
@@ -22,8 +23,11 @@ export class TokenStorageService {
   }
 
   public getUser(): any {
-    const user = sessionStorage.getItem(USER_KEY);
-    return user ? JSON.parse(user) : null;
+    if (isPlatformBrowser(this.platformId)) {  // Check if running in a browser
+      const user = sessionStorage.getItem(USER_KEY);
+      return user ? JSON.parse(user) : null;
+    }
+    return null;  // Handle non-browser environments
   }
 
   public logOut(): void {

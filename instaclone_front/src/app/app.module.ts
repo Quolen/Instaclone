@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MaterialModule} from "./material-module";
-import {HttpClientModule} from "@angular/common/http";
+import {HttpClientModule, provideHttpClient, withFetch} from "@angular/common/http";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {authInterceptorProviders} from "./helper/auth-interceptor.service";
 import {authErrorInterceptorProvider} from "./helper/error-interceptor.service";
@@ -31,6 +31,7 @@ import { RegisterComponent } from './auth/register/register.component';
   providers: [
     provideClientHydration(),
     provideAnimationsAsync(),
+    provideHttpClient(withFetch()),
     authInterceptorProviders,
     authErrorInterceptorProvider
   ],
