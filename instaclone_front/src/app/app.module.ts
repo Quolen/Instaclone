@@ -12,12 +12,15 @@ import {authInterceptorProviders} from "./helper/auth-interceptor.service";
 import {authErrorInterceptorProvider} from "./helper/error-interceptor.service";
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
+import { NavigationComponent } from './layout/navigation/navigation.component';
+import {MatTooltip} from "@angular/material/tooltip";
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    NavigationComponent
   ],
   imports: [
     BrowserModule,
@@ -26,7 +29,8 @@ import { RegisterComponent } from './auth/register/register.component';
     ReactiveFormsModule,
     MaterialModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    MatTooltip
   ],
   providers: [
     provideClientHydration(),
