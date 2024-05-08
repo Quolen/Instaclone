@@ -22,10 +22,8 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private fb: FormBuilder,
   ) {
-    if (isPlatformBrowser(this.tokenStorage.platformId)) {  // Ensure browser context
-      if (this.tokenStorage.getUser()) {
-        this.router.navigate(['main']);  // Redirect if user is logged in
-      }
+    if (this.tokenStorage.getUser()) {
+      this.router.navigate(['main']);  // Redirect if user is logged in
     }
   }
 
@@ -55,7 +53,7 @@ export class LoginComponent implements OnInit {
 
           this.notificationService.showSnackBar('Successfully logged in');
           this.router.navigate(['/']);
-          window.location.reload();
+
         },
         error: (error) => {
           console.log(error);
