@@ -20,14 +20,14 @@ public class ImageUploadController {
     @Autowired
     private ImageUploadService imageUploadService;
 
-    @PostMapping("upload")
+    @PostMapping("/upload")
     public ResponseEntity<MessageResponse> uploadImageToUser(@RequestParam("file") MultipartFile file,
                                                              Principal principal) throws IOException {
         imageUploadService.uploadImageToUser(file, principal);
         return ResponseEntity.ok(new MessageResponse("Image uploaded successfully"));
     }
 
-    @PostMapping("{postId}/upload")
+    @PostMapping("/{postId}/upload")
     public ResponseEntity<MessageResponse> uploadImageToPost(@PathVariable("postId") String postId,
                                                              @RequestParam("file") MultipartFile file,
                                                              Principal principal) throws IOException {

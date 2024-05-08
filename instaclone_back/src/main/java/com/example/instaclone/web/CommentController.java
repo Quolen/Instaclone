@@ -44,7 +44,7 @@ public class CommentController {
         return new ResponseEntity<>(createdComment, HttpStatus.OK);
     }
 
-    @GetMapping("{postId}/all")
+    @GetMapping("/{postId}/all")
     public ResponseEntity<List<CommentDTO>> getAllCommentsToPost(@PathVariable("postId") String postId) {
         List<CommentDTO> commentDTOList = commentService.getAllCommentsForPost(Long.parseLong(postId))
                 .stream()
@@ -54,7 +54,7 @@ public class CommentController {
         return new ResponseEntity<>(commentDTOList, HttpStatus.OK);
     }
 
-    @PostMapping("{commentId}/delete")
+    @PostMapping("/{commentId}/delete")
     public ResponseEntity<MessageResponse> deleteComment(@PathVariable("commentId") String commentId) {
         commentService.DeleteComment(Long.parseLong(commentId));
         return new ResponseEntity<>(new MessageResponse("Comment was deleted"), HttpStatus.OK);
