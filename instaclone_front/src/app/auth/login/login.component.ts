@@ -4,7 +4,6 @@ import {AuthService} from "../../service/auth.service";
 import {TokenStorageService} from "../../service/token-storage.service";
 import {NotificationService} from "../../service/notification.service";
 import {Router} from "@angular/router";
-import {isPlatformBrowser} from "@angular/common";
 
 @Component({
   selector: 'app-login',
@@ -53,7 +52,7 @@ export class LoginComponent implements OnInit {
 
           this.notificationService.showSnackBar('Successfully logged in');
           this.router.navigate(['/']);
-
+          window.location.reload();
         },
         error: (error) => {
           console.log(error);

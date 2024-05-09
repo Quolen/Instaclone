@@ -1,0 +1,16 @@
+.user-profile {
+  display: block;
+  margin: 0 auto;
+  width: 60%;
+  text-align: left;
+  padding-top: 3rem;
+}
+
+.profile-image {
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+  display: block;
+  margin-right: auto;
+  margin-bottom: 2rem;
+}
