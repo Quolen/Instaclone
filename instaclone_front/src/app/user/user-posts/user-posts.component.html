@@ -1,0 +1,49 @@
+<!-- Ensure posts are loaded before displaying -->
+<div *ngIf="arePostsLoaded" class="user-posts-container">
+  <!-- Loop through the user's posts -->
+  <mat-card class="post-card user-post-card" *ngFor="let post of posts; let i = index">
+    <mat-card-header>
+      <mat-card-title>{{ post.title }}</mat-card-title>
+      <mat-card-subtitle>{{ post.location }}</mat-card-subtitle>
+    </mat-card-header>
+
+    <!-- Display post image -->
+    <img mat-card-image [src]="formatImage(post.image)" alt="post image" />
+
+    <mat-card-content>
+      <p>{{ post.caption }}</p>
+    </mat-card-content>
+
+    <mat-card-actions align="start">
+      <!-- Like button with state-based styling -->
+      <button
+        mat-icon-button
+        matTooltip="Like this post" *ngIf="post.id !== undefined"
+        (click)="likePost(post.id, i)"
+        [ngClass]="post.userLiked?.indexOf('username') !== -1 ? 'is-liked' : 'not-liked'">
+        <mat-icon>favorite</mat-icon>
+      </button>
+
+      <!-- Comment input -->
+      <mat-form-field class="full-width">
+        <mat-label>Leave a comment...</mat-label>
+        <input
+          matInput
+          *ngIf="post.id !== undefined"
+          (keyup.enter)="postComment(commentInput.value, post.id, i)"
+          placeholder="Type a comment"
+          #commentInput />
+      </mat-form-field>
+    </mat-card-actions>
+
+    <!-- Display post comments -->
+    <div class="post-comments">
+      <h4>Comments</h4>
+      <div *ngFor="let comment of post.comments">
+        <p>
+          <strong>{{ comment.username }}</strong>: {{ comment.message }}
+        </p>
+      </div>
+    </div>
+  </mat-card>
+</div>

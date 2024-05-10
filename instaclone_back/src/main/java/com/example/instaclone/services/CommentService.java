@@ -58,7 +58,7 @@ public class CommentService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException("Post cannot be found"));
 
-        return commentRepository.findAllByPost(post);
+        return commentRepository.findAllByPostOrderByCreatedAtDesc(post);
     }
 
     public void DeleteComment(Long commentId) {
