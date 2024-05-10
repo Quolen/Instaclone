@@ -1,0 +1,35 @@
+.post-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: right;
+}
+
+.post-form {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.image-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.post-image {
+  max-width: 230px;
+  height: auto;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.form-field {
+  width: 100%;
+}
+
+.footer {
+  text-align: right;
+}
