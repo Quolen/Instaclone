@@ -18,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.Principal;
-import java.util.Optional;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.zip.DataFormatException;
@@ -30,11 +29,11 @@ public class ImageUploadService {
 
     public static final Logger LOG = LoggerFactory.getLogger(ImageUploadService.class);
 
-    private ImageRepository imageRepository;
+    private final ImageRepository imageRepository;
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    private PostRepository postRepository;
+    private final PostRepository postRepository;
 
     @Autowired
     public ImageUploadService(ImageRepository imageRepository, UserRepository userRepository, PostRepository postRepository) {
@@ -43,24 +42,26 @@ public class ImageUploadService {
         this.postRepository = postRepository;
     }
 
-    public ImageModel uploadImageToUser(MultipartFile file, Principal principal) throws IOException {
+    public void uploadImageToUser(MultipartFile file, Principal principal) throws IOException {
         User user = getUserByPrincipal(principal);
         LOG.info("Uploading image profile to User {}", user.getUsername());
 
         // If user already has an image we delete it.
-        ImageModel userProfileImage = imageRepository.findByUserId(user.getId()).orElse(null);
-        if (!ObjectUtils.isEmpty(userProfileImage)) {
-            imageRepository.delete(userProfileImage);
-        }
+        imageRepository.findByUserIdAndPostId(user.getId(), null).ifPresent(imageRepository::delete);
 
         ImageModel image = new ImageModel();
         image.setUserId(user.getId());
         image.setImageBytes(compressBytes(file.getBytes()));
         image.setName(file.getOriginalFilename());
-        return imageRepository.save(image);
+        imageRepository.save(image);
     }
 
-    public ImageModel uploadImageToPost(MultipartFile file, Principal principal, Long postId) throws IOException {
+    public void deleteProfileImage(Principal principal){
+        User user = getUserByPrincipal(principal);
+        imageRepository.findByUserIdAndPostId(user.getId(), null).ifPresent(imageRepository::delete);
+    }
+
+    public void uploadImageToPost(MultipartFile file, Principal principal, Long postId) throws IOException {
         User user = getUserByPrincipal(principal);
         Post post = user.getPosts()
                 .stream()
@@ -74,13 +75,13 @@ public class ImageUploadService {
         imageModel.setUserId(user.getId());
         LOG.info("Uploading image profile to Post: {}", postId);
 
-        return imageRepository.save(imageModel);
+        imageRepository.save(imageModel);
     }
 
     public ImageModel getImageToUser(Principal principal) {
         User user = getUserByPrincipal(principal);
 
-        ImageModel image = imageRepository.findByUserId(user.getId())
+        ImageModel image = imageRepository.findByUserIdAndPostId(user.getId(),null)
                 .orElse(null);
         if (image != null) {
             image.setImageBytes(decompressBytes(image.getImageBytes()));
