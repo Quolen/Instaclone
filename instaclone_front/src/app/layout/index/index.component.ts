@@ -70,15 +70,15 @@ export class IndexComponent implements OnInit {
     const post = this.posts[postIndex];
     console.log(post);
 
-    if (post.userLiked === undefined) {
-      post.userLiked = [];  // Ensure `userLiked` is initialized
+    if (post.likedUsers === undefined) {
+      post.likedUsers = [];  // Ensure `userLiked` is initialized
     }
 
-    if (!post.userLiked.includes(this.user.username)) {
+    if (!post.likedUsers.includes(this.user.username)) {
       this.postService.likePost(postId, this.user.username)
         .subscribe({
           next: () => {
-            post.userLiked?.push(this.user.username);
+            post.likedUsers?.push(this.user.username);
             this.notificationService.showSnackBar('Liked!');
           },
           error: (err) => {
@@ -90,9 +90,9 @@ export class IndexComponent implements OnInit {
       this.postService.likePost(postId, this.user.username)
         .subscribe({
           next: () => {
-            const index = post.userLiked?.indexOf(this.user.username);
+            const index = post.likedUsers?.indexOf(this.user.username);
             if (index !== undefined && index > -1) {
-              post.userLiked?.splice(index, 1);
+              post.likedUsers?.splice(index, 1);
             }
             this.notificationService.showSnackBar('Unliked!');
           },
