@@ -21,9 +21,9 @@ export class NavigationComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.tokenStorage.isLoggedIn$.subscribe(isLoggedIn => {
-      this.isLoggedIn = isLoggedIn;
-    });
+    if (this.tokenStorage.getToken()) {
+      this.isLoggedIn = true;
+    }
 
     if (this.isLoggedIn) {
       this.userService.getCurrentUser()

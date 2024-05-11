@@ -51,7 +51,7 @@ export class LoginComponent implements OnInit {
           this.tokenStorage.saveUser(data);
 
           this.router.navigate(['/']);
-          this.notificationService.showSnackBar('Successfully logged in');
+          window.location.reload();
         }
       });
   }
