@@ -70,15 +70,15 @@ export class IndexComponent implements OnInit {
     const post = this.posts[postIndex];
     console.log(post);
 
-    if (post.likedUsers === undefined) {
-      post.likedUsers = [];  // Ensure `userLiked` is initialized
+    if (post.usersLiked === undefined) {
+      post.usersLiked = [];  // Ensure `userLiked` is initialized
     }
 
-    if (!post.likedUsers.includes(this.user.username)) {
+    if (!post.usersLiked.includes(this.user.username)) {
       this.postService.likePost(postId, this.user.username)
         .subscribe({
           next: () => {
-            post.likedUsers?.push(this.user.username);
+            post.usersLiked?.push(this.user.username);
             this.notificationService.showSnackBar('Liked!');
           },
           error: (err) => {
@@ -90,9 +90,9 @@ export class IndexComponent implements OnInit {
       this.postService.likePost(postId, this.user.username)
         .subscribe({
           next: () => {
-            const index = post.likedUsers?.indexOf(this.user.username);
+            const index = post.usersLiked?.indexOf(this.user.username);
             if (index !== undefined && index > -1) {
-              post.likedUsers?.splice(index, 1);
+              post.usersLiked?.splice(index, 1);
             }
             this.notificationService.showSnackBar('Unliked!');
           },
@@ -110,7 +110,7 @@ export class IndexComponent implements OnInit {
     this.commentService.addCommentToPost(postId, message)
       .subscribe(data => {
         console.log(data);
-        post.comments?.push(data);
+        post.comments?.unshift(data);
       });
   }
 
