@@ -41,6 +41,12 @@ public class ImageUploadController {
         return new ResponseEntity<>(userImage, HttpStatus.OK);
     }
 
+    @GetMapping("/profileImage/{userId}")
+    public ResponseEntity<ImageModel> getProfileImageToPost(@PathVariable("userId") Long userId) {
+        ImageModel userImage = imageUploadService.getProfileImageToPost(userId);
+        return new ResponseEntity<>(userImage, HttpStatus.OK);
+    }
+
     @PostMapping("/profileImage/delete")
     public ResponseEntity<MessageResponse> deleteImageForUser(Principal principal) {
         imageUploadService.deleteProfileImage(principal);

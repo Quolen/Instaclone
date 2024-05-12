@@ -89,6 +89,15 @@ public class ImageUploadService {
         return image;
     }
 
+    public ImageModel getProfileImageToPost(Long userId) {
+        ImageModel image = imageRepository.findByUserIdAndPostId(userId, null)
+                .orElse(null);
+        if (image != null) {
+            image.setImageBytes(decompressBytes(image.getImageBytes()));
+        }
+        return image;
+    }
+
     public ImageModel getImageToPost(Long postId) {
         ImageModel image = imageRepository.findByPostId(postId)
                 .orElseThrow(() -> new ImageNotFoundException("Cannot find image to Post: " + postId));

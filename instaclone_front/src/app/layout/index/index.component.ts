@@ -20,6 +20,9 @@ export class IndexComponent implements OnInit {
   isUserDataLoaded = false;
   user!: User;
 
+  postProfileImages: Map<number, string> = new Map<number, string>(); // Map to store post user profile images
+
+
   constructor(private userService: UserService,
               private postService: PostService,
               private commentService: CommentService,
@@ -46,6 +49,12 @@ export class IndexComponent implements OnInit {
 
   getImagesToPosts(posts: Post[]): void {
     posts.forEach(post => {
+      if (post.userId !== undefined) {
+        this.imageService.getProfileImageToPost(post.userId)
+          .subscribe(data => {
+            this.postProfileImages.set(post.userId ?? -1, 'data:image/jpeg;base64,' + data.imageBytes);
+          })
+      }
       if (post.id !== undefined) {
         this.imageService.getImageToPost(post.id)
           .subscribe(data => {

@@ -20,6 +20,8 @@ public class PostDTO {
 
     private String username;
 
+    private Long userId;
+
     private Integer likes;
 
     private Set<String> usersLiked;
