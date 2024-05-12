@@ -14,7 +14,9 @@ import {NotificationService} from "../../service/notification.service";
 export class UserPostsComponent implements OnInit{
 
   arePostsLoaded = false;
+  imageLoaded = false;
   posts!: Post[];
+  userProfileImage!: File;
 
   constructor(private userService: UserService,
               private postService: PostService,
@@ -31,6 +33,12 @@ export class UserPostsComponent implements OnInit{
         this.getImagesToPosts(this.posts);
         this.getCommentsToPosts(this.posts);
         this.arePostsLoaded = true;
+      });
+
+    this.imageService.getProfileImage()
+      .subscribe(data => {
+        this.userProfileImage = data.imageBytes;
+        this.imageLoaded = true;
       });
   }
 

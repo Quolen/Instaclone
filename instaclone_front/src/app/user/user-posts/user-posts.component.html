@@ -1,38 +1,41 @@
-<div *ngIf="arePostsLoaded">
-  <div style="text-align: right">
+<div *ngIf="arePostsLoaded && imageLoaded" class="post-container">
+  <div class="add-post-button">
     <button mat-flat-button color="primary" routerLink="/profile/add">Add Post</button>
   </div>
 
-  <h2>{{posts.length}} Posts</h2>
+  <h2 class="post-heading">{{posts.length}} Posts</h2>
 
   <mat-card class="post-card" *ngFor="let post of posts; let i = index">
-    <mat-card-header style="text-align: left">
-      <div mat-card-avatar class="example-header-image"></div>
-      <mat-card-title>{{post.title}}</mat-card-title>
-      <mat-card-subtitle>{{post.location}}</mat-card-subtitle>
+    <mat-card-header class="post-header">
+      <div mat-card-avatar class="profile-image">
+        <img [src]="formatImage(userProfileImage)" alt="profile image">
+      </div>
+      <div class="post-title">
+        <mat-card-title>{{post.title}}</mat-card-title>
+        <mat-card-subtitle>{{post.location}}</mat-card-subtitle>
+      </div>
     </mat-card-header>
     <img mat-card-image [src]="formatImage(post.image)" alt="post image">
-    <mat-card-content>
-      <p>
-        {{post.caption}}
-      </p>
+    <mat-card-content class="post-content">
+      <p class="post-caption">{{post.caption}}</p>
+      <div class="comments-section">
+        <div *ngFor="let comment of post.comments; let c = index" class="comment">
+          <span class="comment-username">{{comment.username}}</span>: <span class="comment-message">{{comment.message}}</span>
+          <button color="accent" mat-button *ngIf="comment.id !== undefined" (click)="deleteComment(comment.id, i, c)">
+            <mat-icon color="accent">clear</mat-icon>
+          </button>
+        </div>
+      </div>
     </mat-card-content>
 
-    <div style="text-align: left">
-      <p *ngFor="let comment of post.comments; let c = index"><span style="font-weight: 500">{{comment.username}}</span>: {{comment.message}}
-        <button color="accent" mat-button *ngIf="comment.id !== undefined" (click)="deleteComment(comment.id, i, c)">
-          <mat-icon color="accent">clear</mat-icon>
-        </button>
-      </p>
-    </div>
-
-    <mat-card-actions align="end">
+    <mat-card-actions class="post-actions" align="end">
+      <mat-card-subtitle class="likes-info">Likes: {{post.likes}} <span *ngIf="post.likes !== undefined && post.likes > 0">by {{post.usersLiked}}</span></mat-card-subtitle>
+    </mat-card-actions>
+    <mat-card-actions class="post-actions" align="end">
       <button color="warn" mat-button (click)="deletePost(post, i)">
         <mat-icon color="warn">delete</mat-icon>
         Remove Post
       </button>
     </mat-card-actions>
-
-    <mat-card-subtitle>Likes: {{post.likes}} <span *ngIf="post.likes !== undefined && post.likes > 0">by {{post.usersLiked}}</span></mat-card-subtitle>
   </mat-card>
 </div>

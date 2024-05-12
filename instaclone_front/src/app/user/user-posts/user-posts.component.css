@@ -1,0 +1,70 @@
+.post-container {
+  padding: 20px;
+}
+
+.add-post-button {
+  text-align: right;
+}
+
+.post-heading {
+  margin-bottom: 20px;
+}
+
+.profile-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 10px;
+}
+
+.post-header {
+  display: flex;
+  align-items: center;
+}
+
+.post-title {
+  flex-grow: 1;
+}
+
+.post-content {
+  padding: 10px 0;
+}
+
+.post-caption {
+  font-size: 16px; /* Adjust the font size as desired */
+  font-weight: bold;
+  margin: 0 0 10px 12px; /* Add left margin */
+}
+
+.comments-section {
+  margin-left: 12px; /* Add left margin */
+}
+
+.comment {
+  margin-bottom: 3px; /* Reduce the space between comments */
+}
+
+.comment-username {
+  font-weight: 500;
+}
+
+.comment-message {
+  margin-left: 5px;
+}
+
+.post-actions {
+  display: flex;
+  align-items: center;
+  margin-top: 5px; /* Reduce the top margin */
+  margin-left: 12px; /* Add left margin */
+}
+
+.likes-info {
+  margin-right: auto; /* Push Likes to the left */
+  margin-left: -8px; /* Add left margin to align with comments */
+}
+
+.delete-post-button {
+  margin-left: 10px; /* Add margin between Likes and Delete Post */
+}
