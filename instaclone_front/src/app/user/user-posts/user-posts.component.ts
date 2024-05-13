@@ -5,6 +5,7 @@ import {ImageUploadService} from "../../service/image-upload.service";
 import {CommentService} from "../../service/comment.service";
 import {UserService} from "../../service/user.service";
 import {NotificationService} from "../../service/notification.service";
+import {ProfilePictureService} from "../../service/profile-picture.service";
 
 @Component({
   selector: 'app-user-posts',
@@ -22,10 +23,19 @@ export class UserPostsComponent implements OnInit{
               private postService: PostService,
               private commentService: CommentService,
               private notificationService: NotificationService,
-              private imageService: ImageUploadService) {
+              private imageService: ImageUploadService,
+              private profilePictureService: ProfilePictureService) {
   }
 
   ngOnInit(): void {
+    this.profilePictureService.profilePictureUpdated$
+      .subscribe(() => {
+        this.imageService.getProfileImage()
+          .subscribe(data => {
+            this.userProfileImage = data.imageBytes;
+            this.imageLoaded = true;
+          });
+      })
     this.postService.getPostForCurrentUser()
       .subscribe(data => {
         console.log(data);
@@ -33,12 +43,6 @@ export class UserPostsComponent implements OnInit{
         this.getImagesToPosts(this.posts);
         this.getCommentsToPosts(this.posts);
         this.arePostsLoaded = true;
-      });
-
-    this.imageService.getProfileImage()
-      .subscribe(data => {
-        this.userProfileImage = data.imageBytes;
-        this.imageLoaded = true;
       });
   }
 

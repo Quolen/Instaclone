@@ -7,6 +7,7 @@ import {NotificationService} from "../../service/notification.service";
 import {ImageUploadService} from "../../service/image-upload.service";
 import {UserService} from "../../service/user.service";
 import {EditUserComponent} from "../edit-user/edit-user.component";
+import {ProfilePictureService} from "../../service/profile-picture.service";
 
 @Component({
   selector: 'app-profile',
@@ -26,7 +27,8 @@ export class ProfileComponent implements OnInit{
               private dialog: MatDialog,
               private notificationService: NotificationService,
               private imageService: ImageUploadService,
-              private userService: UserService,) { }
+              private userService: UserService,
+              private profilePictureService: ProfilePictureService) { }
 
   ngOnInit(): void {
     this.userService.getCurrentUser()
@@ -63,7 +65,8 @@ export class ProfileComponent implements OnInit{
   onUpload(): void {
     if (this.selectedFile != null) {
       this.imageService.uploadImageToUser(this.selectedFile)
-        .subscribe(data => {
+        .subscribe(() => {
+          this.profilePictureService.notifyProfilePictureUpdated();
           this.notificationService.showSnackBar("Profile Image updated successfully")
         });
     }
