@@ -8,19 +8,22 @@ import {ImageUploadService} from "../../service/image-upload.service";
 import {UserService} from "../../service/user.service";
 import {EditUserComponent} from "../edit-user/edit-user.component";
 import {ProfilePictureService} from "../../service/profile-picture.service";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
 })
-export class ProfileComponent implements OnInit{
+export class ProfileComponent implements OnInit {
 
   isUserDataLoaded = false;
   user!: User;
+  userId!: number;
   selectedFile!: File;
   userProfileImage!: File;
   previewImgURL: any;
+  isProfileOwner: boolean = false;
 
   constructor(private tokenService: TokenStorageService,
               private postService: PostService,
@@ -28,19 +31,27 @@ export class ProfileComponent implements OnInit{
               private notificationService: NotificationService,
               private imageService: ImageUploadService,
               private userService: UserService,
-              private profilePictureService: ProfilePictureService) { }
+              private profilePictureService: ProfilePictureService,
+              private route: ActivatedRoute,) {
+  }
 
   ngOnInit(): void {
-    this.userService.getCurrentUser()
-      .subscribe(data => {
-        this.user = data;
-        this.isUserDataLoaded = true;
-      });
-
-    this.imageService.getProfileImage()
-      .subscribe(data => {
-        this.userProfileImage = data.imageBytes;
-      });
+    this.route.params.subscribe(params => {
+      this.userId = +params['userId'];
+      this.userService.getUserById(this.userId)
+        .subscribe(data => {
+          this.user = data;
+          this.userService.getCurrentUser()
+            .subscribe(data => {
+              this.isProfileOwner = data.id === this.userId;
+              this.isUserDataLoaded = true;
+            })
+        });
+      this.imageService.getProfileImageByUserId(this.userId)
+        .subscribe(data => {
+          this.userProfileImage = data.imageBytes;
+        });
+    });
   }
 
   onFileSelected(event: any): void {

@@ -50,7 +50,7 @@ export class IndexComponent implements OnInit {
   getImagesToPosts(posts: Post[]): void {
     posts.forEach(post => {
       if (post.userId !== undefined) {
-        this.imageService.getProfileImageToPost(post.userId)
+        this.imageService.getProfileImageByUserId(post.userId)
           .subscribe(data => {
             this.postProfileImages.set(post.userId ?? -1, 'data:image/jpeg;base64,' + data.imageBytes);
           })
