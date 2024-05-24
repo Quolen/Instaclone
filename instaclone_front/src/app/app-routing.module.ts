@@ -7,6 +7,7 @@ import {AuthGuardService} from "./helper/auth-guard.service";
 import {ProfileComponent} from "./user/profile/profile.component";
 import {UserPostsComponent} from "./user/user-posts/user-posts.component";
 import {AddPostComponent} from "./user/add-post/add-post.component";
+import {ChatComponent} from "./chat/chat.component";
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
@@ -18,6 +19,7 @@ const routes: Routes = [
       {path: 'add', component: AddPostComponent, canActivate: [AuthGuardService]}
     ]
   },
+  { path: 'chat/:userId', component: ChatComponent, canActivate: [AuthGuardService] },
   {path: '**', redirectTo: 'main', pathMatch: 'full'}
 ];
 
