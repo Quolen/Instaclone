@@ -1,0 +1,29 @@
+<div *ngIf="thisUserLoaded && otherUserLoaded && connectedToChat" class="chat-container mat-elevation-z8">
+  <mat-toolbar color="primary">
+    <div class="user-info">
+      <img class="avatar" mat-card-avatar [src]="formatImage(userProfileImage) || 'https://static.vecteezy.com/system/resources/thumbnails/008/442/086/small_2x/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg'"  alt="img"/>
+      <span>Chat with {{ otherUser?.username }}</span>
+    </div>
+  </mat-toolbar>
+
+  <div #chat id="chat" class="chat-messages">
+    <div *ngFor="let msg of messages | async" class="message"
+         [ngClass]="{'message-sent': msg.sender === thisUser.username, 'message-received': msg.sender === otherUser!.username}">
+      <img *ngIf="msg.sender === otherUser!.username" mat-card-avatar [src]="formatImage(userProfileImage) || 'https://static.vecteezy.com/system/resources/thumbnails/008/442/086/small_2x/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg'" class="avatar"  alt="img"/>
+      <div class="message-content">
+        <div class="msg-content">
+          {{ msg.content }}
+          <span class="message-timestamp">{{ whenWasItPublished(msg.t_stamp ?? '') }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <mat-form-field class="message-input">
+    <mat-label>Type your message...</mat-label>
+    <input matInput [formControl]="newMessage" (keyup.enter)="sendMsg()">
+    <button mat-icon-button matSuffix (click)="sendMsg()">
+      <mat-icon>send</mat-icon>
+    </button>
+  </mat-form-field>
+</div>
