@@ -34,4 +34,8 @@ export class ImageUploadService {
   getImageToPost(postId: number): Observable<any>  {
     return this.http.get(IMAGE_API + postId + '/image');
   }
+
+  deleteProfileImage(): Observable<any> {
+    return this.http.post(IMAGE_API + 'profileImage/delete', null);
+  }
 }

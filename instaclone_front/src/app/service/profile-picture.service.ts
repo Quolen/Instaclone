@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, Subject} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProfilePictureService {
+  private profilePictureUpdatedSubject = new Subject<void>();
 
-  private profilePictureSubject = new BehaviorSubject<boolean>(false);
-
-  profilePictureUpdated$ = this.profilePictureSubject.asObservable();
+  profilePictureUpdated$ = this.profilePictureUpdatedSubject.asObservable();
 
   notifyProfilePictureUpdated() {
-    this.profilePictureSubject.next(true);
+    this.profilePictureUpdatedSubject.next();
   }
 }

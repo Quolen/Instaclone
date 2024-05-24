@@ -15,6 +15,10 @@ export class UserService {
     return this.http.get(USER_API + id);
   }
 
+  getUserByUsername(username: string): Observable<any> {
+    return this.http.get(USER_API + 'username/' + username);
+  }
+
   getCurrentUser(): Observable<any> {
     return this.http.get(USER_API);
   }
