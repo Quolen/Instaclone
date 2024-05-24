@@ -1,6 +1,6 @@
 <div class="post-container">
   <div class="header">
-    <button mat-flat-button color="primary" routerLink="/profile">My Posts</button>
+    <button mat-flat-button color="primary" [routerLink]="['/profile', user.id]">My Posts</button>
   </div>
 
   <h2>Create Post</h2>

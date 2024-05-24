@@ -6,6 +6,7 @@ import {CommentService} from "../../service/comment.service";
 import {UserService} from "../../service/user.service";
 import {NotificationService} from "../../service/notification.service";
 import {ProfilePictureService} from "../../service/profile-picture.service";
+import { User } from '../../models/User';
 
 @Component({
   selector: 'app-user-posts',
@@ -18,6 +19,7 @@ export class UserPostsComponent implements OnInit{
   imageLoaded = false;
   posts!: Post[];
   userProfileImage!: File;
+  user!: User;
 
   constructor(private userService: UserService,
               private postService: PostService,
@@ -36,6 +38,11 @@ export class UserPostsComponent implements OnInit{
             this.imageLoaded = true;
           });
       })
+    this.imageService.getProfileImage()
+      .subscribe(data => {
+        this.userProfileImage = data.imageBytes;
+        this.imageLoaded = true;
+      });
     this.postService.getPostForCurrentUser()
       .subscribe(data => {
         console.log(data);
@@ -44,6 +51,10 @@ export class UserPostsComponent implements OnInit{
         this.getCommentsToPosts(this.posts);
         this.arePostsLoaded = true;
       });
+    this.userService.getCurrentUser()
+      .subscribe(user => {
+        this.user = user;
+      })
   }
 
   getImagesToPosts(posts: Post[]): void {

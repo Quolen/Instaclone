@@ -5,6 +5,8 @@ import {NotificationService} from "../../service/notification.service";
 import {PostService} from "../../service/post.service";
 import {Router} from "@angular/router";
 import {ImageUploadService} from "../../service/image-upload.service";
+import {UserService} from "../../service/user.service";
+import {User} from "../../models/User";
 
 @Component({
   selector: 'app-add-post',
@@ -18,16 +20,22 @@ export class AddPostComponent implements OnInit{
   isPostCreated = false;
   createdPost!: Post;
   previewImgURL: any;
+  user!: User;
 
   constructor(private fb: FormBuilder,
               private notificationService: NotificationService,
               private postService: PostService,
+              private userService: UserService,
               private router: Router,
               private imageService: ImageUploadService,) {
   }
 
   ngOnInit(): void {
     this.postForm = this.createPostForm();
+    this.userService.getCurrentUser()
+      .subscribe(user => {
+        this.user = user;
+      })
   }
 
   createPostForm(): FormGroup {

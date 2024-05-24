@@ -1,6 +1,6 @@
-<div *ngIf="arePostsLoaded && imageLoaded" class="post-container">
+<div *ngIf="arePostsLoaded" class="post-container">
   <div class="add-post-button">
-    <button mat-flat-button color="primary" routerLink="/profile/add">Add Post</button>
+    <button mat-flat-button color="primary" [routerLink]="['/profile', user.id, 'add']">Add Post</button>
   </div>
 
   <h2 class="post-heading">{{posts.length}} Posts</h2>
@@ -8,7 +8,7 @@
   <mat-card class="post-card" *ngFor="let post of posts; let i = index">
     <mat-card-header class="post-header">
       <div mat-card-avatar class="profile-image">
-        <img [src]="formatImage(userProfileImage)" alt="profile image">
+        <img [src]="formatImage(userProfileImage) || 'https://static.vecteezy.com/system/resources/thumbnails/008/442/086/small_2x/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg'" alt="profile image">
       </div>
       <div class="post-title">
         <mat-card-title>{{post.title}}</mat-card-title>
