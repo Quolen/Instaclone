@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {Post} from "../../models/Post";
 import {User} from "../../models/User";
 import {UserService} from "../../service/user.service";
@@ -6,6 +6,7 @@ import {PostService} from "../../service/post.service";
 import {CommentService} from "../../service/comment.service";
 import {NotificationService} from "../../service/notification.service";
 import {ImageUploadService} from "../../service/image-upload.service";
+import {catchError, forkJoin, of} from "rxjs";
 
 @Component({
   selector: 'app-index',
@@ -27,40 +28,52 @@ export class IndexComponent implements OnInit {
               private postService: PostService,
               private commentService: CommentService,
               private notificationService: NotificationService,
-              private imageService: ImageUploadService) {
+              private imageService: ImageUploadService,
+              private cdRef: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
-    this.postService.getAllPosts()
-      .subscribe(data => {
-        console.log(data);
-        this.posts = data;
-        this.getImagesToPosts(this.posts);
-        this.getCommentsToPosts(this.posts);
-        this.isPostsLoaded = true;
-      })
-
-    this.userService.getCurrentUser()
-      .subscribe(data => {
-        this.user = data;
-        this.isUserDataLoaded = true;
-      })
+    forkJoin([
+      this.postService.getAllPosts(),
+      this.userService.getCurrentUser()
+    ]).subscribe(([posts, user]) => {
+      this.posts = posts;
+      this.user = user;
+      this.getImagesToPosts(this.posts); // Now calls getImagesToPosts with forkJoin
+      this.getCommentsToPosts(this.posts);
+      this.isPostsLoaded = true;
+      this.isUserDataLoaded = true;
+    });
   }
 
   getImagesToPosts(posts: Post[]): void {
-    posts.forEach(post => {
-      if (post.userId !== undefined) {
-        this.imageService.getProfileImageByUserId(post.userId)
-          .subscribe(data => {
-            this.postProfileImages.set(post.userId ?? -1, 'data:image/jpeg;base64,' + data.imageBytes);
-          })
-      }
-      if (post.id !== undefined) {
-        this.imageService.getImageToPost(post.id)
-          .subscribe(data => {
-            post.image = data.imageBytes;
-          })
-      }
+    const profileImageObservables = posts
+      .filter(post => post.userId !== undefined)
+      .map(post => this.imageService.getProfileImageByUserId(post.userId!)
+        .pipe(catchError(error => {
+          console.error(`Error fetching profile image for post ${post.id}:`, error);
+          return of(null);
+        }))
+      );
+
+    forkJoin(profileImageObservables).subscribe(imageDataArray => {
+      imageDataArray.forEach((imageData, index) => {
+        const post = this.posts[index];
+        if (post && post.userId && imageData) {
+          this.postProfileImages.set(post.userId, 'data:image/jpeg;base64,' + imageData.imageBytes);
+        }
+      });
+
+      // Fetch post images (retained original logic)
+      posts.forEach(post => {
+        if (post.id) {
+          this.imageService.getImageToPost(post.id)
+            .subscribe(data => {
+              post.image = data.imageBytes;
+              this.cdRef.detectChanges();  // Trigger change detection
+            });
+        }
+      });
     });
   }
 

@@ -1,3 +1,4 @@
+version: '3.8'
 services:
   backend:
     build: ./instaclone_back
@@ -14,8 +15,15 @@ services:
     build: ./instaclone_front
     ports:
       - 4200:4200
+    volumes:
+      - ./instaclone_front:/app
+      - /app/node_modules
     depends_on:
       - backend
+    command: >
+      sh -c "npm install &&
+             ng serve --host 0.0.0.0 --poll 2000 --watch"
+
   instaclone-mysql:
     image: mysql:latest
     restart: always

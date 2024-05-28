@@ -22,7 +22,7 @@
       <div *ngIf="isProfileOwner">
         <button mat-button (click)="fileInput.click()">Pick File</button>
         <button mat-button *ngIf="selectedFile" (click)="onUpload()">Upload</button>
-        <button mat-button *ngIf="hasProfileImage" (click)="deleteProfileImage()">Delete Image</button>
+        <button mat-button *ngIf="hasProfileImage" (click)="deleteProfileImage()" [ngClass]="{'hover-red': true}">Delete Image</button>
       </div>
     </div>
     <div class="col" style="text-align: left">

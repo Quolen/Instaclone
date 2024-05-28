@@ -14,3 +14,11 @@
   margin-right: auto;
   margin-bottom: 2rem;
 }
+
+.hover-red {
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.hover-red:hover {
+  background-color: #ff6f61;
+}
