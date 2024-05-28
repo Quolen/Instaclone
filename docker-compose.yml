@@ -6,8 +6,8 @@ services:
       - 8080:8080
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://$${MYSQL_HOST:instaclone-mysql}:3306/instaclone
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=h0xoA[BkiFI;zK6
+      - SPRING_DATASOURCE_USERNAME=${MYSQL_USER}
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_PASSWORD}
     depends_on:
       instaclone-mysql:
         condition: service_healthy
@@ -28,7 +28,7 @@ services:
     image: mysql:latest
     restart: always
     environment:
-      - MYSQL_ROOT_PASSWORD=h0xoA[BkiFI;zK6
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     ports:
       - 3306:3306
     volumes:
