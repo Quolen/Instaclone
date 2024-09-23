@@ -38,8 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(AuthController.class)
 public class AuthControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    private final MockMvc mockMvc;
 
     @MockBean
     private JWTTokenProvider jwtTokenProvider;
@@ -55,6 +54,11 @@ public class AuthControllerTest {
 
     @MockBean
     private UserService userService;
+
+    @Autowired
+    public AuthControllerTest(MockMvc mockMvc) {
+        this.mockMvc = mockMvc;
+    }
 
     @Test
     @WithMockUser

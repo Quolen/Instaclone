@@ -2,8 +2,7 @@ package com.example.instaclone.security;
 
 import com.example.instaclone.entity.User;
 import io.jsonwebtoken.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
@@ -12,9 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
+@Slf4j
 public class JWTTokenProvider {
-
-    public static final Logger LOG = LoggerFactory.getLogger(JWTTokenProvider.class);
 
     public String generateToken(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
@@ -49,7 +47,7 @@ public class JWTTokenProvider {
                  ExpiredJwtException |
                  UnsupportedJwtException |
                  IllegalArgumentException ex) {
-            LOG.error(ex.getMessage());
+            log.error(ex.getMessage());
             return false;
         }
     }

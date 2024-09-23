@@ -7,7 +7,7 @@ import com.example.instaclone.payload.response.MessageResponse;
 import com.example.instaclone.services.CommentService;
 import com.example.instaclone.validations.ResponseErrorValidation;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
@@ -20,16 +20,12 @@ import java.util.List;
 @RestController
 @RequestMapping("api/comment")
 @CrossOrigin
+@RequiredArgsConstructor
 public class CommentController {
 
-    @Autowired
-    private CommentService commentService;
-
-    @Autowired
-    private CommentFacade commentFacade;
-
-    @Autowired
-    private ResponseErrorValidation responseErrorValidation;
+    private final CommentService commentService;
+    private final CommentFacade commentFacade;
+    private final ResponseErrorValidation responseErrorValidation;
 
     @PostMapping("/{postId}/create")
     public ResponseEntity<Object> createComment(@Valid @RequestBody CommentDTO commentDTO,

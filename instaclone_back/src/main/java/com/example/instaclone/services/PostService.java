@@ -8,25 +8,18 @@ import com.example.instaclone.exceptions.PostNotFoundException;
 import com.example.instaclone.repository.ImageRepository;
 import com.example.instaclone.repository.PostRepository;
 import com.example.instaclone.repository.UserRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
-
-/*
- Post Service for managing posts related logic.
- */
 @Service
+@Slf4j
 public class PostService {
-
-    public static final Logger LOG = LoggerFactory.getLogger(PostService.class);
 
     private final PostRepository postRepository;
 
@@ -50,7 +43,7 @@ public class PostService {
         post.setTitle(postDTO.getTitle());
         post.setLikes(0);
 
-        LOG.info("Saving Post for User: {}", user.getEmail());
+        log.info("Saving Post for User: {}", user.getEmail());
         return postRepository.save(post);
     }
 

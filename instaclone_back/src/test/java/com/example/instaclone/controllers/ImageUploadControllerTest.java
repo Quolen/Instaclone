@@ -37,8 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(ImageUploadController.class)
 public class ImageUploadControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    private final MockMvc mockMvc;
 
     @MockBean
     private ImageUploadService imageUploadService;
@@ -51,6 +50,11 @@ public class ImageUploadControllerTest {
 
     @MockBean
     private JWTTokenProvider jwtTokenProvider;
+
+    @Autowired
+    public ImageUploadControllerTest(MockMvc mockMvc) {
+        this.mockMvc = mockMvc;
+    }
 
     private String jwtToken;
 

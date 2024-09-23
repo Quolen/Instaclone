@@ -43,8 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(PostController.class)
 public class PostControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    private final MockMvc mockMvc;
 
     @MockBean
     private PostService postService;
@@ -63,6 +62,11 @@ public class PostControllerTest {
 
     @MockBean
     private CustomUserDetailService customUserDetailService;
+
+    @Autowired
+    public PostControllerTest(MockMvc mockMvc) {
+        this.mockMvc = mockMvc;
+    }
 
     private String jwtToken;
 

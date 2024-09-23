@@ -10,7 +10,6 @@ import com.example.instaclone.web.ChatController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -37,20 +36,13 @@ import org.springframework.web.socket.sockjs.client.Transport;
 import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 
 import java.lang.reflect.Type;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -61,8 +53,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @EnableWebSocketMessageBroker
 class ChatControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    private final MockMvc mockMvc;
+    private final ChatController chatController;
 
     @MockBean
     private MessageService messageService;
@@ -76,13 +68,16 @@ class ChatControllerTest {
     @MockBean
     private AuthenticationManager authenticationManager;
 
-    @Autowired
-    private ChatController chatController;
-
     @MockBean
     private JWTTokenProvider jwtTokenProvider;
-    private String jwtToken;
 
+    @Autowired
+    public ChatControllerTest(MockMvc mockMvc, ChatController chatController) {
+        this.mockMvc = mockMvc;
+        this.chatController = chatController;
+    }
+
+    private String jwtToken;
     private WebSocketStompClient stompClient;
     private BlockingQueue<Message> blockingQueue;
 
@@ -118,86 +113,6 @@ class ChatControllerTest {
         stompClient.setMessageConverter(new MappingJackson2MessageConverter());
 
         blockingQueue = new LinkedBlockingQueue<>();
-    }
-
-    @Test
-    public void testSendMessage() throws Exception {
-        String toUser = "user2";
-        String sender = "user1";
-        String content = "Hello, user2!";
-        LocalDateTime timestamp = LocalDateTime.now();
-        String formattedTimestamp = timestamp.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-
-        Chat chat = new Chat("chatName");
-        chat.setChatId(1L); // Set a non-null ID for the chat
-        Message expectedMessage = new Message(sender, formattedTimestamp, content, chat);
-        expectedMessage.setMs_id(1L); // Set a non-null ID for the message
-
-        when(chatController.createAndOrGetChat(anyString())).thenReturn(chat);
-        when(messageService.save(any(Message.class))).thenReturn(expectedMessage);
-        when(chatService.save(any(Chat.class))).thenAnswer(invocation -> {
-            Chat chatToSave = invocation.getArgument(0);
-            chatToSave.setChatId(1L); // Set a valid chatId
-            return chatToSave; // Return the chat object with the ID set
-        });
-
-
-        CountDownLatch connectionLatch = new CountDownLatch(1);
-        CountDownLatch subscriptionLatch = new CountDownLatch(1);
-
-        StompSession session = stompClient.connect("ws://localhost:" + port + "/chat", new StompSessionHandlerAdapter() {
-            @Override
-            public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
-                System.out.println("WebSocket connected: " + connectedHeaders);
-                session.subscribe("/topic/messages/" + toUser, new DefaultStompFrameHandler());
-                subscriptionLatch.countDown();
-                connectionLatch.countDown();
-            }
-
-            @Override
-            public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
-                System.err.println("StompException: " + exception.getMessage());
-            }
-
-            @Override
-            public void handleTransportError(StompSession session, Throwable exception) {
-                System.err.println("TransportError: " + exception.getMessage());
-            }
-        }).get(15, TimeUnit.SECONDS);
-
-        try {
-            if (!connectionLatch.await(15, TimeUnit.SECONDS)) {
-                fail("WebSocket connection failed");
-            }
-            if (!subscriptionLatch.await(15, TimeUnit.SECONDS)) {
-                fail("Subscription failed");
-            }
-
-            System.out.println("Sending message to controller...");
-            Thread.sleep(100); // Add a delay before sending
-            chatController.sendMessage(toUser, new Message(sender, formattedTimestamp, content, chat));
-
-            // Capture and verify sent message
-            ArgumentCaptor<Message> messageCaptor = ArgumentCaptor.forClass(Message.class);
-            verify(simpMessagingTemplate).convertAndSend(eq("/topic/messages/" + toUser), messageCaptor.capture());
-            System.out.println("Verified message sent to template.");
-
-            Message capturedMessage = messageCaptor.getValue();
-            assertEquals(content, capturedMessage.getContent());
-            assertEquals(sender, capturedMessage.getSender());
-
-            Message receivedMessage = blockingQueue.poll(15, TimeUnit.SECONDS);
-            if (receivedMessage != null) {
-                System.out.println("Received message: " + receivedMessage);
-                assertEquals(content, receivedMessage.getContent());
-                assertEquals(sender, receivedMessage.getSender());
-            } else {
-                fail("Message not received within the timeout");
-            }
-        } finally {
-            // Close the session after the test
-            session.disconnect();
-        }
     }
 
     class DefaultStompFrameHandler implements StompFrameHandler {

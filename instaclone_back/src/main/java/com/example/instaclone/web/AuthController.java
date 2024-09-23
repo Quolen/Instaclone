@@ -9,14 +9,13 @@ import com.example.instaclone.security.SecurityConstants;
 import com.example.instaclone.services.UserService;
 import com.example.instaclone.validations.ResponseErrorValidation;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,23 +23,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Controller
 @RestController
 @RequestMapping("/api/auth")
 @PreAuthorize("permitAll()")
+@RequiredArgsConstructor
 public class AuthController {
 
-    @Autowired
-    private JWTTokenProvider jwtTokenProvider;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private ResponseErrorValidation responseErrorValidation;
-
-    @Autowired
-    private UserService userService;
+    private final JWTTokenProvider jwtTokenProvider;
+    private final AuthenticationManager authenticationManager;
+    private final ResponseErrorValidation responseErrorValidation;
+    private final UserService userService;
 
     @PostMapping("/signin")
     public ResponseEntity<Object> authenticateUser(@Valid @RequestBody LoginRequest loginRequest, BindingResult bindingResult) {

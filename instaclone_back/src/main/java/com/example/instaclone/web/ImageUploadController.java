@@ -3,7 +3,7 @@ package com.example.instaclone.web;
 import com.example.instaclone.entity.ImageModel;
 import com.example.instaclone.payload.response.MessageResponse;
 import com.example.instaclone.services.ImageUploadService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +15,10 @@ import java.security.Principal;
 @RestController
 @RequestMapping("api/image")
 @CrossOrigin
+@RequiredArgsConstructor
 public class ImageUploadController {
 
-    @Autowired
-    private ImageUploadService imageUploadService;
+    private final ImageUploadService imageUploadService;
 
     @PostMapping("/upload")
     public ResponseEntity<MessageResponse> uploadImageToUser(@RequestParam("file") MultipartFile file,

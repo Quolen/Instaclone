@@ -7,7 +7,7 @@ import com.example.instaclone.payload.response.MessageResponse;
 import com.example.instaclone.services.PostService;
 import com.example.instaclone.validations.ResponseErrorValidation;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
@@ -20,16 +20,12 @@ import java.util.List;
 @RestController
 @RequestMapping("api/post")
 @CrossOrigin
+@RequiredArgsConstructor
 public class PostController {
 
-    @Autowired
-    private PostFacade postFacade;
-
-    @Autowired
-    private PostService postService;
-
-    @Autowired
-    private ResponseErrorValidation responseErrorValidation;
+    private final PostFacade postFacade;
+    private final PostService postService;
+    private final ResponseErrorValidation responseErrorValidation;
 
     @PostMapping("/create")
     public ResponseEntity<Object> createPost(@Valid @RequestBody PostDTO postDTO,

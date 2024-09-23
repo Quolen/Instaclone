@@ -11,8 +11,6 @@ import org.springframework.validation.ObjectError;
 import java.util.HashMap;
 import java.util.Map;
 
-/* Maps validation results to user-friendly error messages
- and generates appropriate HTTP responses */
 @Service
 public class ResponseErrorValidation {
 

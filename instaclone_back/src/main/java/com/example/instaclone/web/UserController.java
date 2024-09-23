@@ -6,7 +6,7 @@ import com.example.instaclone.facade.UserFacade;
 import com.example.instaclone.services.UserService;
 import com.example.instaclone.validations.ResponseErrorValidation;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
@@ -15,19 +15,16 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
+
 @RestController
 @RequestMapping("api/user")
 @CrossOrigin
+@RequiredArgsConstructor
 public class UserController {
 
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private UserFacade userFacade;
-
-    @Autowired
-    private ResponseErrorValidation responseErrorValidation;
+    private final UserService userService;
+    private final UserFacade userFacade;
+    private final ResponseErrorValidation responseErrorValidation;
 
     @GetMapping("/")
     public ResponseEntity<UserDTO>  getCurrentUser(Principal principal) {

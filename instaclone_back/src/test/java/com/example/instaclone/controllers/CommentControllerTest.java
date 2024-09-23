@@ -46,8 +46,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(CommentController.class)
 public class CommentControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    private final MockMvc mockMvc;
 
     @MockBean
     private CommentService commentService;
@@ -66,6 +65,11 @@ public class CommentControllerTest {
 
     @MockBean
     private CustomUserDetailService customUserDetailService;
+
+    @Autowired
+    public CommentControllerTest(MockMvc mockMvc) {
+        this.mockMvc = mockMvc;
+    }
 
     private String jwtToken;
 

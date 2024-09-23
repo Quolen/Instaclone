@@ -5,10 +5,8 @@ import com.example.instaclone.entity.Post;
 import com.example.instaclone.entity.User;
 import com.example.instaclone.exceptions.ImageNotFoundException;
 import com.example.instaclone.repository.ImageRepository;
-import com.example.instaclone.repository.PostRepository;
 import com.example.instaclone.repository.UserRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -25,28 +23,23 @@ import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
 @Service
+@Slf4j
 public class ImageUploadService {
-
-    public static final Logger LOG = LoggerFactory.getLogger(ImageUploadService.class);
 
     private final ImageRepository imageRepository;
 
     private final UserRepository userRepository;
 
-    private final PostRepository postRepository;
-
     @Autowired
-    public ImageUploadService(ImageRepository imageRepository, UserRepository userRepository, PostRepository postRepository) {
+    public ImageUploadService(ImageRepository imageRepository, UserRepository userRepository) {
         this.imageRepository = imageRepository;
         this.userRepository = userRepository;
-        this.postRepository = postRepository;
     }
 
     public void uploadImageToUser(MultipartFile file, Principal principal) throws IOException {
         User user = getUserByPrincipal(principal);
-        LOG.info("Uploading image profile to User {}", user.getUsername());
+        log.info("Uploading image profile to User {}", user.getUsername());
 
-        // If user already has an image we delete it.
         imageRepository.findByUserIdAndPostId(user.getId(), null).ifPresent(imageRepository::delete);
 
         ImageModel image = new ImageModel();
@@ -73,7 +66,7 @@ public class ImageUploadService {
         imageModel.setImageBytes(compressBytes(file.getBytes()));
         imageModel.setName(file.getOriginalFilename());
         imageModel.setUserId(user.getId());
-        LOG.info("Uploading image profile to Post: {}", postId);
+        log.info("Uploading image profile to Post: {}", postId);
 
         imageRepository.save(imageModel);
     }
@@ -120,7 +113,7 @@ public class ImageUploadService {
         try {
             outputStream.close();
         } catch (IOException e) {
-            LOG.error("Cannot compress bytes");
+            log.error("Cannot compress bytes");
         }
         System.out.println("Compressed image byte size: " + outputStream.toByteArray().length);
         return outputStream.toByteArray();
@@ -138,7 +131,7 @@ public class ImageUploadService {
             }
             outputStream.close();
         } catch (IOException | DataFormatException e) {
-            LOG.error("Cannot decompress bytes");
+            log.error("Cannot decompress bytes");
         }
         return outputStream.toByteArray();
     }

@@ -8,8 +8,7 @@ import com.example.instaclone.exceptions.PostNotFoundException;
 import com.example.instaclone.repository.CommentRepository;
 import com.example.instaclone.repository.PostRepository;
 import com.example.instaclone.repository.UserRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -18,13 +17,9 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
-/*
- Comment Service for managing comments related logic.
- */
 @Service
+@Slf4j
 public class CommentService {
-
-    public static final Logger LOG = LoggerFactory.getLogger(CommentService.class);
 
     private final CommentRepository commentRepository;
 
@@ -50,7 +45,7 @@ public class CommentService {
         comment.setUsername(user.getUsername());
         comment.setMessage(commentDTO.getMessage());
 
-        LOG.info("Saving comment for Post: {} ", post.getId());
+        log.info("Saving comment for Post: {} ", post.getId());
         return commentRepository.save(comment);
     }
 
