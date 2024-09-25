@@ -2,7 +2,7 @@ package com.example.instaclone.controllers;
 
 import com.example.instaclone.dto.PostDTO;
 import com.example.instaclone.entity.Post;
-import com.example.instaclone.facade.PostFacade;
+import com.example.instaclone.mapper.PostMapper;
 import com.example.instaclone.security.JWTTokenProvider;
 import com.example.instaclone.services.CustomUserDetailService;
 import com.example.instaclone.services.PostService;
@@ -49,7 +49,7 @@ public class PostControllerTest {
     private PostService postService;
 
     @MockBean
-    private PostFacade postFacade;
+    private PostMapper postMapper;
 
     @MockBean
     private ResponseErrorValidation responseErrorValidation;
@@ -102,7 +102,7 @@ public class PostControllerTest {
 
         given(responseErrorValidation.mapValidationService(any())).willReturn(null);
         given(postService.createPost(any(PostDTO.class), any(Principal.class))).willReturn(post);
-        given(postFacade.postToPostDTO(any(Post.class))).willReturn(postDTO);
+        given(postMapper.postToPostDTO(any(Post.class))).willReturn(postDTO);
 
         String postJson = "{\"title\":\"Test Title\",\"caption\":\"Test Caption\"}";
 
@@ -125,7 +125,7 @@ public class PostControllerTest {
         List<PostDTO> postDTOList = Arrays.asList(postDTO);
 
         given(postService.getAllPosts()).willReturn(Arrays.asList(new Post()));
-        given(postFacade.postToPostDTO(any(Post.class))).willReturn(postDTO);
+        given(postMapper.postToPostDTO(any(Post.class))).willReturn(postDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/post/all")
                         .header("Authorization", "Bearer " + jwtToken))
@@ -143,7 +143,7 @@ public class PostControllerTest {
         List<PostDTO> postDTOList = Arrays.asList(postDTO);
 
         given(postService.getAllPostForUser(any(Principal.class))).willReturn(Arrays.asList(new Post()));
-        given(postFacade.postToPostDTO(any(Post.class))).willReturn(postDTO);
+        given(postMapper.postToPostDTO(any(Post.class))).willReturn(postDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/post/user/posts")
                         .header("Authorization", "Bearer " + jwtToken))
@@ -164,7 +164,7 @@ public class PostControllerTest {
         post.setCaption("Test Caption");
 
         given(postService.likePost(anyLong(), anyString())).willReturn(post);
-        given(postFacade.postToPostDTO(any(Post.class))).willReturn(postDTO);
+        given(postMapper.postToPostDTO(any(Post.class))).willReturn(postDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/post/1/testUser/like")
                         .header("Authorization", "Bearer " + jwtToken)

@@ -17,7 +17,7 @@ import java.io.IOException;
 public class GlobalExceptionHandler {
     @ExceptionHandler(UserExistException.class)
     public ResponseEntity<String> handleUserExistException(UserExistException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);  // Correctly mapped to HTTP 400
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(PostNotFoundException.class)

@@ -2,7 +2,7 @@ package com.example.instaclone.controllers;
 
 import com.example.instaclone.dto.UserDTO;
 import com.example.instaclone.entity.User;
-import com.example.instaclone.facade.UserFacade;
+import com.example.instaclone.mapper.UserMapper;
 import com.example.instaclone.security.JWTTokenProvider;
 import com.example.instaclone.services.CustomUserDetailService;
 import com.example.instaclone.services.UserService;
@@ -47,7 +47,7 @@ public class UserControllerTest {
     private UserService userService;
 
     @MockBean
-    private UserFacade userFacade;
+    private UserMapper userMapper;
 
     @MockBean
     private ResponseErrorValidation responseErrorValidation;
@@ -97,7 +97,7 @@ public class UserControllerTest {
         userDTO.setUsername("testUser");
 
         given(userService.getCurrentUser(any(Principal.class))).willReturn(user);
-        given(userFacade.userToUserDTO(any(User.class))).willReturn(userDTO);
+        given(userMapper.userToUserDTO(any(User.class))).willReturn(userDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/")
                         .header("Authorization", "Bearer " + jwtToken))
@@ -116,7 +116,7 @@ public class UserControllerTest {
         userDTO.setUsername("testUser");
 
         given(userService.getUserById(1L)).willReturn(user);
-        given(userFacade.userToUserDTO(any(User.class))).willReturn(userDTO);
+        given(userMapper.userToUserDTO(any(User.class))).willReturn(userDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/1")
                         .header("Authorization", "Bearer " + jwtToken))
@@ -135,7 +135,7 @@ public class UserControllerTest {
         userDTO.setUsername("testUser");
 
         given(userService.getUserByUsername("testUser")).willReturn(user);
-        given(userFacade.userToUserDTO(any(User.class))).willReturn(userDTO);
+        given(userMapper.userToUserDTO(any(User.class))).willReturn(userDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/username/testUser")
                         .header("Authorization", "Bearer " + jwtToken))
@@ -156,7 +156,7 @@ public class UserControllerTest {
 
         given(responseErrorValidation.mapValidationService(any())).willReturn(null);
         given(userService.updateUser(any(UserDTO.class), any(Principal.class))).willReturn(user);
-        given(userFacade.userToUserDTO(any(User.class))).willReturn(userDTO);
+        given(userMapper.userToUserDTO(any(User.class))).willReturn(userDTO);
 
         String userJson = "{\"id\":1,\"username\":\"updatedUser\"}";
 
@@ -172,7 +172,7 @@ public class UserControllerTest {
 
     @Test
     public void testGetCurrentUserWithInvalidToken() throws Exception {
-        // Simulate invalid token by not setting SecurityContext properly
+
         SecurityContextHolder.clearContext();
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/")
@@ -182,8 +182,8 @@ public class UserControllerTest {
 
     @Test
     public void testGetCurrentUserWithMissingToken() throws Exception {
-        SecurityContextHolder.clearContext();  // Remove the existing security context
-        // Mock authentication manager to throw exception when no token is present
+        SecurityContextHolder.clearContext();
+
         given(authenticationManager.authenticate(any(Authentication.class))).willThrow(new BadCredentialsException("No Authentication provided"));
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/"))
                 .andExpect(status().isUnauthorized());
@@ -200,11 +200,11 @@ public class UserControllerTest {
 
     @Test
     public void testUpdateUserWithValidationErrors() throws Exception {
-        UserDTO userDTO = new UserDTO(); // Empty userDTO to trigger validation errors
+        UserDTO userDTO = new UserDTO();
 
         given(responseErrorValidation.mapValidationService(any())).willReturn(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
 
-        String userJson = "{}"; // Invalid JSON to trigger validation errors
+        String userJson = "{}";
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/user/update")
                         .contentType(MediaType.APPLICATION_JSON)

@@ -5,7 +5,7 @@ import com.example.instaclone.entity.Comment;
 import com.example.instaclone.exceptions.AuthorizationException;
 import com.example.instaclone.exceptions.CommentNotFoundException;
 import com.example.instaclone.exceptions.PostNotFoundException;
-import com.example.instaclone.facade.CommentFacade;
+import com.example.instaclone.mapper.CommentMapper;
 import com.example.instaclone.security.JWTTokenProvider;
 import com.example.instaclone.services.CommentService;
 import com.example.instaclone.services.CustomUserDetailService;
@@ -52,7 +52,7 @@ public class CommentControllerTest {
     private CommentService commentService;
 
     @MockBean
-    private CommentFacade commentFacade;
+    private CommentMapper commentMapper;
 
     @MockBean
     private ResponseErrorValidation responseErrorValidation;
@@ -103,7 +103,7 @@ public class CommentControllerTest {
 
         given(responseErrorValidation.mapValidationService(any())).willReturn(null);
         given(commentService.saveComment(anyLong(), any(CommentDTO.class), any(Principal.class))).willReturn(comment);
-        given(commentFacade.commentToCommentDTO(any(Comment.class))).willReturn(commentDTO);
+        given(commentMapper.commentToCommentDTO(any(Comment.class))).willReturn(commentDTO);
 
         String commentJson = "{\"message\":\"Test Comment\"}";
 
@@ -124,7 +124,7 @@ public class CommentControllerTest {
         List<CommentDTO> commentDTOList = Arrays.asList(commentDTO);
 
         given(commentService.getAllCommentsForPost(anyLong())).willReturn(Arrays.asList(new Comment()));
-        given(commentFacade.commentToCommentDTO(any(Comment.class))).willReturn(commentDTO);
+        given(commentMapper.commentToCommentDTO(any(Comment.class))).willReturn(commentDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/comment/1/all")
                         .header("Authorization", "Bearer " + jwtToken))

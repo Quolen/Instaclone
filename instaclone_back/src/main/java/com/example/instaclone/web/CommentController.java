@@ -2,7 +2,7 @@ package com.example.instaclone.web;
 
 import com.example.instaclone.dto.CommentDTO;
 import com.example.instaclone.entity.Comment;
-import com.example.instaclone.facade.CommentFacade;
+import com.example.instaclone.mapper.CommentMapper;
 import com.example.instaclone.payload.response.MessageResponse;
 import com.example.instaclone.services.CommentService;
 import com.example.instaclone.validations.ResponseErrorValidation;
@@ -24,7 +24,7 @@ import java.util.List;
 public class CommentController {
 
     private final CommentService commentService;
-    private final CommentFacade commentFacade;
+    private final CommentMapper commentMapper;
     private final ResponseErrorValidation responseErrorValidation;
 
     @PostMapping("/{postId}/create")
@@ -36,7 +36,7 @@ public class CommentController {
         if (!ObjectUtils.isEmpty(errors)) return errors;
 
         Comment comment = commentService.saveComment(Long.parseLong(postId), commentDTO, principal);
-        CommentDTO createdComment = commentFacade.commentToCommentDTO(comment);
+        CommentDTO createdComment = commentMapper.commentToCommentDTO(comment);
         return new ResponseEntity<>(createdComment, HttpStatus.OK);
     }
 
@@ -44,13 +44,13 @@ public class CommentController {
     public ResponseEntity<List<CommentDTO>> getAllCommentsToPost(@PathVariable("postId") String postId) {
         List<CommentDTO> commentDTOList = commentService.getAllCommentsForPost(Long.parseLong(postId))
                 .stream()
-                .map(commentFacade::commentToCommentDTO)
+                .map(commentMapper::commentToCommentDTO)
                 .toList();
 
         return new ResponseEntity<>(commentDTOList, HttpStatus.OK);
     }
 
-    @PostMapping("/{commentId}/delete")
+    @DeleteMapping("/{commentId}/delete")
     public ResponseEntity<MessageResponse> deleteComment(@PathVariable("commentId") String commentId) {
         commentService.DeleteComment(Long.parseLong(commentId));
         return new ResponseEntity<>(new MessageResponse("Comment was deleted"), HttpStatus.OK);

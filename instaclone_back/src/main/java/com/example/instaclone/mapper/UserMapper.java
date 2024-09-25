@@ -1,11 +1,11 @@
-package com.example.instaclone.facade;
+package com.example.instaclone.mapper;
 
 import com.example.instaclone.dto.UserDTO;
 import com.example.instaclone.entity.User;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserFacade {
+public class UserMapper {
 
     public UserDTO userToUserDTO(User user) {
         UserDTO userDTO = new UserDTO();

@@ -2,7 +2,7 @@ package com.example.instaclone.web;
 
 import com.example.instaclone.dto.PostDTO;
 import com.example.instaclone.entity.Post;
-import com.example.instaclone.facade.PostFacade;
+import com.example.instaclone.mapper.PostMapper;
 import com.example.instaclone.payload.response.MessageResponse;
 import com.example.instaclone.services.PostService;
 import com.example.instaclone.validations.ResponseErrorValidation;
@@ -23,7 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostController {
 
-    private final PostFacade postFacade;
+    private final PostMapper postMapper;
     private final PostService postService;
     private final ResponseErrorValidation responseErrorValidation;
 
@@ -36,7 +36,7 @@ public class PostController {
         if (!ObjectUtils.isEmpty(errors)) return errors;
 
         Post post = postService.createPost(postDTO, principal);
-        PostDTO createdPost = postFacade.postToPostDTO(post);
+        PostDTO createdPost = postMapper.postToPostDTO(post);
         return new ResponseEntity<>(createdPost, HttpStatus.OK);
     }
 
@@ -44,7 +44,7 @@ public class PostController {
     public ResponseEntity<List<PostDTO>> getAllPosts() {
         List<PostDTO> postDTOList = postService.getAllPosts()
                 .stream()
-                .map(postFacade::postToPostDTO)
+                .map(postMapper::postToPostDTO)
                 .toList();
         return new ResponseEntity<>(postDTOList, HttpStatus.OK);
     }
@@ -53,7 +53,7 @@ public class PostController {
     public ResponseEntity<List<PostDTO>> getAllPostsForUser(Principal principal) {
         List<PostDTO> postDTOList = postService.getAllPostForUser(principal)
                 .stream()
-                .map(postFacade::postToPostDTO)
+                .map(postMapper::postToPostDTO)
                 .toList();
         return new ResponseEntity<>(postDTOList, HttpStatus.OK);
     }
@@ -62,11 +62,11 @@ public class PostController {
     public ResponseEntity<PostDTO> likePost(@PathVariable("postId") String postId,
                                             @PathVariable("username") String username) {
         Post post = postService.likePost(Long.parseLong(postId), username);
-        PostDTO postDTO = postFacade.postToPostDTO(post);
+        PostDTO postDTO = postMapper.postToPostDTO(post);
         return new ResponseEntity<>(postDTO, HttpStatus.OK);
     }
 
-    @PostMapping("/{postId}/delete")
+    @DeleteMapping("/{postId}/delete")
     public ResponseEntity<MessageResponse> deletePost(@PathVariable("postId") String postId, Principal principal) {
         postService.deletePost(Long.parseLong(postId), principal);
         return new ResponseEntity<>(new MessageResponse("Post was deleted"), HttpStatus.OK);

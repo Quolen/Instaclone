@@ -1,11 +1,11 @@
-package com.example.instaclone.facade;
+package com.example.instaclone.mapper;
 
 import com.example.instaclone.dto.PostDTO;
 import com.example.instaclone.entity.Post;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PostFacade {
+public class PostMapper {
 
     public PostDTO postToPostDTO(Post post) {
         PostDTO postDTO = new PostDTO();
