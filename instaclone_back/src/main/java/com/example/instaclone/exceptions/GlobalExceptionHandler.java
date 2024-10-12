@@ -1,9 +1,5 @@
-package com.example.instaclone.advice;
+package com.example.instaclone.exceptions;
 
-import com.example.instaclone.exceptions.AuthorizationException;
-import com.example.instaclone.exceptions.CommentNotFoundException;
-import com.example.instaclone.exceptions.PostNotFoundException;
-import com.example.instaclone.exceptions.UserExistException;
 import com.example.instaclone.payload.response.MessageResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
