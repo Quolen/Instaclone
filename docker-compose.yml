@@ -4,29 +4,31 @@ services:
     ports:
       - 8080:8080
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://$${MYSQL_HOST:instaclone-mysql}:3306/instaclone
+      - SPRING_DATASOURCE_URL=jdbc:mysql://instaclone-mysql:3306/instaclone
       - SPRING_DATASOURCE_USERNAME=${MYSQL_USER}
       - SPRING_DATASOURCE_PASSWORD=${MYSQL_PASSWORD}
     depends_on:
       instaclone-mysql:
         condition: service_healthy
+    restart: unless-stopped
+
   frontend:
     build: ./instaclone_front
     ports:
       - 4200:4200
     volumes:
       - ./instaclone_front:/app
-      - /app/node_modules
     depends_on:
       - backend
-    command: >
-      sh -c "npm install &&
-             ng serve --host 0.0.0.0 --poll 2000 --watch"
+    restart: unless-stopped
 
   instaclone-mysql:
     image: mysql:latest
     restart: always
     environment:
+      - MYSQL_DATABASE=instaclone
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     ports:
       - 3307:3306
