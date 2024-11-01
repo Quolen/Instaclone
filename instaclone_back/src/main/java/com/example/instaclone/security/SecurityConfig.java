@@ -31,8 +31,10 @@ public class SecurityConfig {
                 .exceptionHandling(eh -> eh.authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/chat/**").permitAll()
-                        .requestMatchers(SecurityConstants.SIGN_UP_URLS).permitAll()
+                        .requestMatchers("/chat/**",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                SecurityConstants.SIGN_UP_URLS).permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 

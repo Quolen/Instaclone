@@ -3,6 +3,7 @@ package com.example.instaclone.entity;
 import com.example.instaclone.entity.enums.ERole;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,6 +13,7 @@ import java.util.*;
 
 @Data
 @Entity
+@AllArgsConstructor
 public class User implements UserDetails {
 
     @Id
@@ -63,6 +65,15 @@ public class User implements UserDetails {
         this.email = email;
         this.password = password;
         this.authorities = authorities;
+    }
+
+    public User(Long id, String name, String lastname, String username, String email, String password) {
+        this.id = id;
+        this.name = name;
+        this.lastname = lastname;
+        this.username = username;
+        this.email = email;
+        this.password = password;
     }
 
     @PrePersist
