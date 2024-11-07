@@ -24,4 +24,6 @@ public class ImageModel {
 
     @JsonIgnore
     private Long postId;
+
+    private String s3Key;
 }
