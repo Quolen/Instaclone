@@ -33,8 +33,8 @@ class PostRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
-    User user;
-    Post post1, post2;
+    private User user;
+    private Post post1, post2;
 
     @BeforeEach
     void setUp() {

@@ -8,6 +8,8 @@ import com.example.instaclone.exceptions.PostNotFoundException;
 import com.example.instaclone.repository.ImageRepository;
 import com.example.instaclone.repository.PostRepository;
 import com.example.instaclone.repository.UserRepository;
+import com.example.instaclone.s3.S3Buckets;
+import com.example.instaclone.s3.S3Service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,11 +29,17 @@ public class PostService {
 
     private final ImageRepository imageRepository;
 
+    private final S3Service s3Service;
+
+    private final S3Buckets s3Buckets;
+
     @Autowired
-    public PostService(PostRepository postRepository, UserRepository userRepository, ImageRepository imageRepository) {
+    public PostService(PostRepository postRepository, UserRepository userRepository, ImageRepository imageRepository, S3Service s3Service, S3Buckets s3Buckets) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.imageRepository = imageRepository;
+        this.s3Service = s3Service;
+        this.s3Buckets = s3Buckets;
     }
 
     public Post createPost(PostDTO postDTO, Principal principal) {
@@ -84,7 +92,10 @@ public class PostService {
         Post post = getPostById(postId, principal);
         Optional<ImageModel> imageModel = imageRepository.findByPostId(post.getId());
         postRepository.delete(post);
-        imageModel.ifPresent(imageRepository::delete);
+        imageModel.ifPresent(existingImage -> {
+            imageRepository.delete(existingImage);
+            s3Service.deleteObject(s3Buckets.getImgBucket(), existingImage.getS3Key());
+        });
     }
 
     private User getUserByPrincipal(Principal principal) {

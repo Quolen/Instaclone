@@ -27,7 +27,7 @@ class ChatRepositoryTest {
             = new MySQLContainer<>("mysql:latest");
 
     @Autowired
-    ChatRepository chatRepository;
+    private ChatRepository chatRepository;
 
     @BeforeEach
     void setUp() {

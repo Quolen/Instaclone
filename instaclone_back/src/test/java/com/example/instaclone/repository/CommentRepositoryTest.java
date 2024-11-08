@@ -30,14 +30,14 @@ class CommentRepositoryTest {
             = new MySQLContainer<>("mysql:latest");
 
     @Autowired
-    CommentRepository commentRepository;
+    private CommentRepository commentRepository;
     @Autowired
-    PostRepository postRepository;
+    private PostRepository postRepository;
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
-    User testUser;
-    Post testPost;
+    private User testUser;
+    private Post testPost;
 
     @BeforeEach
     void setUp() {

@@ -28,13 +28,13 @@ class MessageRepositoryTest {
             new MySQLContainer<>("mysql:latest");
 
     @Autowired
-    MessageRepository messageRepository;
+    private MessageRepository messageRepository;
 
     @Autowired
-    ChatRepository chatRepository;
+    private ChatRepository chatRepository;
 
-    Chat chat;
-    Message message1, message2;
+    private Chat chat;
+    private Message message1, message2;
 
     @BeforeEach
     void setUp() {

@@ -27,9 +27,9 @@ class UserRepositoryTest {
             = new MySQLContainer<>("mysql:latest");
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
-    User user;
+    private User user;
 
     @BeforeEach
     void setUp() {

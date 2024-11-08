@@ -28,7 +28,7 @@ class ImageRepositoryTest {
             = new MySQLContainer<>("mysql:latest");
 
     @Autowired
-    ImageRepository imageRepository;
+    private ImageRepository imageRepository;
 
     @BeforeEach
     void setUp() {
